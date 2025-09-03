@@ -1,15 +1,14 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { HiOutlineBars3 } from "react-icons/hi2";
 import Overlay from "./Overlay";
 import { sidebarLinks } from "../constants/sidebarLinks";
+import { IoMdHome } from "react-icons/io";
+import useActivePath from "../helpers/useActivePath";
 
 const Sidebar = ({ isOpen, onClose }) => {
-  const location = useLocation();
-  const isActivePath = (path, exact = false) => {
-    return exact
-      ? location.pathname === path
-      : location.pathname.startsWith(path);
-  };
+
+    // Using custom hook
+const isActivePath = useActivePath();
 
   return (
     <>
@@ -28,7 +27,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             onClick={() => {
               onClose();
             }}
-            className="p-2 flex items-center border-none justify-center rounded-full hover:bg-gray-200 dark:hover:bg-[#1f1f1f]"
+            className="p-2 flex items-center border-none justify-center rounded-full hover:bg-gray-200 "
           >
             <HiOutlineBars3 size={24} />
           </button>
@@ -44,6 +43,21 @@ const Sidebar = ({ isOpen, onClose }) => {
         </div>
 
         <nav className="w-full scroll-smooth flex-1  p-3 overflow-y-auto overflow-x-hidden scroll-hover">
+
+           <Link
+            key={"/"}
+            to={"/"}
+            onClick={onClose}
+            className={`flex items-center gap-3 mb-1 w-[calc(100%-12px)] px-3 py-2 rounded-lg text-black ${
+              isActivePath("/", true)
+                ? "bg-gray-100 hover:bg-gray-200"
+                : "hover:bg-gray-100"
+            }`}>
+            <IoMdHome className="w-6 h-6" />
+            <span className="text-sm">Home</span>
+          </Link>
+
+
           {sidebarLinks.map(({ section, links }, i) => (
             <div key={section || i} className="space-y-1">
               {section !== "Main" && (
@@ -52,9 +66,9 @@ const Sidebar = ({ isOpen, onClose }) => {
                 </h4>
               )}
               {links.map(({ to, label, icon: Icon }) => (
-                <NavLink
+                <Button
                   key={to}
-                  to={to}
+              
                   onClick={onClose}
                   className={`flex items-center gap-3 w-[calc(100%-12px)] px-3 py-2 rounded-lg text-black ${
                     isActivePath(to, true)
@@ -64,13 +78,13 @@ const Sidebar = ({ isOpen, onClose }) => {
                 >
                   <Icon className="w-6 h-6" />
                   <span className="text-sm">{label}</span>
-                </NavLink>
+                </Button>
               ))}
             </div>
           ))}
         </nav>
       </aside>
-      <div className={isActivePath("/", true) && "xl:hidden"}>
+     <div className={isActivePath("/", true) ? "xl:hidden" : ""}>
         {isOpen && <Overlay />}
       </div>
     </>
