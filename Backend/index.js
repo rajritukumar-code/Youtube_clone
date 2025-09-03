@@ -18,6 +18,7 @@ mongoose
   })
   .catch((err) => {
     console.log("MongoDB connection error:", err);
+    console.log(process.env.MONGO_URI)
   });
 
 app.get("/", (req, res) => {
