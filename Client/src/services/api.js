@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getToken, logoutUser } from '../utils/authUtils';
+import { getToken, removeToken } from '../utils/authUtils';
 
 // Create axios instance with base configuration
 const API = axios.create({
@@ -31,7 +31,7 @@ API.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Token expired or invalid
-      logoutUser();
+       removeToken();
       // localStorage.removeItem('user');
       window.location.href = '/signin';
     }
