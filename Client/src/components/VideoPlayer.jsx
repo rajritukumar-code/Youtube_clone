@@ -1,6 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getTimeAgo,formatNumber, getInitial } from "../utils/utilityFunctions";
+import {
+  getTimeAgo,
+  formatNumber,
+  getInitial,
+} from "../utils/utilityFunctions";
 import {
   FaPlay,
   FaPause,
@@ -20,9 +24,23 @@ import {
   FaEdit,
   FaTrash,
 } from "react-icons/fa";
-import { MdMoreVert, MdPause, MdPlayArrow, MdPlaylistAdd, MdReply } from "react-icons/md";
+
+import {
+  MdMoreVert,
+  MdPause,
+  MdPlayArrow,
+  MdPlaylistAdd,
+  MdReply,
+} from "react-icons/md";
 import { BiLike, BiDislike, BiShare, BiPause } from "react-icons/bi";
-import { RiDownloadLine, RiPauseLargeFill, RiPauseLargeLine, RiScissorsLine } from "react-icons/ri";
+
+import {
+  RiDownloadLine,
+  RiPauseLargeFill,
+  RiPauseLargeLine,
+  RiScissorsLine,
+} from "react-icons/ri";
+
 import { videoAPI, commentAPI, channelAPI } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { PiPauseBold } from "react-icons/pi";
@@ -409,7 +427,8 @@ const VideoPlayer = () => {
               onClick={togglePlay}
               poster={videoData.thumbnailUrl}
               preload="metadata"
-              src={`${videoData.videoUrl}`}>
+              src={`${videoData.videoUrl}`}
+            >
               <source src={`${videoData.videoUrl}`} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
@@ -418,12 +437,14 @@ const VideoPlayer = () => {
             <div
               className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 transition-opacity duration-300 ${
                 showControls ? "opacity-100" : "opacity-0"
-              }`}>
+              }`}
+            >
               {/* Progress Bar */}
               <div
                 ref={progressRef}
                 className="w-full h-1.5 bg-white/30 rounded-full cursor-pointer mb-4"
-                onClick={handleProgressClick}>
+                onClick={handleProgressClick}
+              >
                 <div
                   className="h-full bg-red-600 rounded-full"
                   style={{ width: `${(currentTime / duration) * 100}%` }}
@@ -435,14 +456,20 @@ const VideoPlayer = () => {
                 <div className="flex items-center gap-4">
                   <button
                     onClick={togglePlay}
-                    className="hover:text-red-500 transition-colors">
-                    {isPlaying ? <MdPause size={30} /> : <BsPlayFill size={30} />}
+                    className="hover:text-red-500 transition-colors"
+                  >
+                    {isPlaying ? (
+                      <MdPause size={30} />
+                    ) : (
+                      <BsPlayFill size={30} />
+                    )}
                   </button>
 
                   <div className="flex items-center gap-2">
                     <button
                       onClick={toggleMute}
-                      className="hover:text-red-500 transition-colors">
+                      className="hover:text-red-500 transition-colors"
+                    >
                       {isMuted ? (
                         <FaVolumeMute size={20} />
                       ) : (
@@ -467,7 +494,8 @@ const VideoPlayer = () => {
 
                 <button
                   onClick={toggleFullscreen}
-                  className="hover:text-red-500 transition-colors">
+                  className="hover:text-red-500 transition-colors"
+                >
                   {isFullscreen ? (
                     <FaCompress size={20} />
                   ) : (
@@ -520,7 +548,8 @@ const VideoPlayer = () => {
                       channelData.isSubscribed
                         ? "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300"
                         : "bg-black text-white hover:bg-gray-800"
-                    }`}>
+                    }`}
+                  >
                     {channelData.isSubscribed ? (
                       <div className="flex items-center gap-1">
                         <FaBell size={14} />
@@ -543,7 +572,8 @@ const VideoPlayer = () => {
                       videoLikeStatus.userLiked
                         ? "text-blue-600 bg-blue-50"
                         : "text-gray-700 hover:bg-gray-200"
-                    }`}>
+                    }`}
+                  >
                     {videoLikeStatus.userLiked ? (
                       <FaThumbsUp size={20} />
                     ) : (
@@ -560,7 +590,8 @@ const VideoPlayer = () => {
                       videoLikeStatus.userDisliked
                         ? "text-red-600 bg-red-50"
                         : "text-gray-700 hover:bg-gray-200"
-                    }`}>
+                    }`}
+                  >
                     {videoLikeStatus.userDisliked ? (
                       <FaThumbsDown size={20} />
                     ) : (
@@ -585,7 +616,8 @@ const VideoPlayer = () => {
                 <div className="relative">
                   <button
                     onClick={() => setShowMoreActions(!showMoreActions)}
-                    className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
+                    className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+                  >
                     <FaEllipsisH size={16} />
                   </button>
 
@@ -612,7 +644,7 @@ const VideoPlayer = () => {
           </div>
 
           {/* Channel Info */}
-          <div className="flex items-start justify-between py-4 border-b border-gray-200 mb-4">
+          <div className="flex bg-gray-100 items-start justify-between  border-b border-gray-200 mb-4 p-4 rounded-lg">
             <div className="flex items-start gap-3">
               <div className="flex-1">
                 <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -631,7 +663,8 @@ const VideoPlayer = () => {
                   </p>
                   <button
                     onClick={() => setShowDescription(!showDescription)}
-                    className="text-sm font-medium text-gray-900 mt-1 hover:text-gray-700">
+                    className="text-sm font-medium text-gray-900 mt-1 hover:text-gray-700"
+                  >
                     {showDescription ? "Show less" : "Show more"}
                   </button>
                 </div>
@@ -649,7 +682,8 @@ const VideoPlayer = () => {
                 <svg
                   className="w-4 h-4"
                   fill="currentColor"
-                  viewBox="0 0 20 20">
+                  viewBox="0 0 20 20"
+                >
                   <path
                     fillRule="evenodd"
                     d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -688,13 +722,15 @@ const VideoPlayer = () => {
                         <button
                           type="button"
                           onClick={() => setNewComment("")}
-                          className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
+                          className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                        >
                           Cancel
                         </button>
                         <button
                           type="submit"
                           disabled={!newComment.trim()}
-                          className="px-4 py-2 text-sm bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors">
+                          className="px-4 py-2 text-sm bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                        >
                           Comment
                         </button>
                       </div>
@@ -748,13 +784,15 @@ const VideoPlayer = () => {
                           <div className="flex justify-end gap-2 mt-2">
                             <button
                               onClick={handleCancelEdit}
-                              className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded transition-colors">
+                              className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                            >
                               Cancel
                             </button>
                             <button
                               onClick={() => handleSaveEdit(comment.id)}
                               disabled={!editCommentText.trim()}
-                              className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors">
+                              className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                            >
                               Save
                             </button>
                           </div>
@@ -776,7 +814,8 @@ const VideoPlayer = () => {
                               comment.userLiked
                                 ? "text-blue-600"
                                 : "text-gray-600 hover:text-gray-900"
-                            }`}>
+                            }`}
+                          >
                             <BiLike
                               size={16}
                               className="group-hover:scale-110 transition-transform"
@@ -795,7 +834,8 @@ const VideoPlayer = () => {
                               comment.userDisliked
                                 ? "text-red-600"
                                 : "text-gray-600 hover:text-gray-900"
-                            }`}>
+                            }`}
+                          >
                             <BiDislike
                               size={16}
                               className="group-hover:scale-110 transition-transform"
@@ -815,13 +855,15 @@ const VideoPlayer = () => {
                           <button
                             onClick={() => handleEditComment(comment)}
                             className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
-                            title="Edit comment">
+                            title="Edit comment"
+                          >
                             <FaEdit size={16} />
                           </button>
                           <button
                             onClick={() => handleDeleteComment(comment.id)}
                             className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
-                            title="Delete comment">
+                            title="Delete comment"
+                          >
                             <FaTrash size={16} />
                           </button>
                         </div>
@@ -839,27 +881,34 @@ const VideoPlayer = () => {
               <h3 className="text-base font-medium mb-3">Up next</h3>
               <div className="space-y-2">
                 {suggestedVideos.map((video) => (
-                  <Link
-                    to={`/watch/${video.id}`}
+                  <div
                     key={video.id}
-                    className="flex gap-2 p-2 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors group">
-                    <div className="relative flex-shrink-0">
-                      <img
-                        src={video.thumbnailUrl}
-                        alt={video.title}
-                        className="w-40 h-24 object-cover rounded-lg"
-                      />
-                      <span className="absolute bottom-1 right-1 bg-black/90 text-white text-xs px-1.5 py-0.5 rounded font-medium">
-                        {video?.duration}
-                      </span>
-                    </div>
+                    className="flex gap-2 p-2 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors group"
+                  >
+                    <Link to={`/watch/${video.id}`}>
+                      <div className="relative flex-shrink-0">
+                        <img
+                          src={video.thumbnailUrl}
+                          alt={video.title}
+                          className="w-40 h-24 object-cover rounded-lg"
+                        />
+
+                        <span className="absolute bottom-1 right-1 bg-black/90 text-white text-xs px-1.5 py-0.5 rounded font-medium">
+                          {video?.duration}
+                        </span>
+                      </div>
+                    </Link>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm leading-tight mb-1 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                        {video?.title}
-                      </h4>
-                      <p className="text-gray-600 text-xs mb-1 hover:text-gray-900 cursor-pointer transition-colors">
-                        {video?.channel?.name}
-                      </p>
+                      <Link to={`/watch/${video.id}`}>
+                        <h4 className="font-medium text-sm leading-tight mb-1 line-clamp-2 group-hover:text-gray-900 transition-colors">
+                          {video?.title}
+                        </h4>
+                      </Link>
+                      <Link to={`/channel/${video?.channel?.id}`}>
+                        <p className="text-gray-600 text-xs mb-1 hover:text-gray-900 cursor-pointer transition-colors">
+                          {video?.channel?.name}
+                        </p>
+                      </Link>
                       <div className="text-gray-500 text-xs">
                         <span>{formatNumber(video.views)} Views</span>
                         <span className="mx-1">•</span>
@@ -871,7 +920,7 @@ const VideoPlayer = () => {
                         <MdMoreVert size={16} className="text-gray-600" />
                       </button>
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             </div>
@@ -887,4 +936,4 @@ const VideoPlayer = () => {
   );
 };
 
-export default VideoPlayer; 
+export default VideoPlayer;

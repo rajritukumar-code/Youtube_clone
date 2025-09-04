@@ -1,7 +1,8 @@
 // src/utils/authUtils.js
 
 
-import api from "../services/api";
+import API from "../services/api";
+
 
 const TOKEN_KEY = "auth_token";
 
@@ -16,7 +17,7 @@ export const getToken = () => {
 };
 
 // Remove token from localStorage
-export const logoutUser = () => {
+export const removeToken = () => {
   localStorage.removeItem(TOKEN_KEY);
 };
 
@@ -25,18 +26,18 @@ export const getUserFromToken = async () => {
   try {
     const token = getToken();
     if (!token) {
-      logoutUser();
+      removeToken();
       return null;
     }
 
 
     
-    const res = await api.get("/auth/verify");
+    const res = await API.get("/auth/verify");
     
     if (res.data.success) {
       return res.data.data;
     }
-    logoutUser();
+    removeToken();
     return null;
   } catch (error) {
     console.error("Error decoding token", error);
