@@ -4,7 +4,6 @@ import {
   getVideoComments,
   updateComment,
   toggleCommentLike,
-  getCommentLikeStatus,
 } from "../controllers/comment.controller.js";
 import { authenticateToken } from "../middlewares/authenticateToken.js";
 import { validateObjectId } from "../middlewares/validateObjectId.js";
@@ -42,6 +41,6 @@ export function commentRoutes(app) {
     "/api/comments/:commentId/like-status",
     authenticateToken,
     validateObjectId("commentId"),
-    getCommentLikeStatus
+   
   ); // Get user's like status
 }

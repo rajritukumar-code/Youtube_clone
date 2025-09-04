@@ -1,6 +1,7 @@
 // import models
 import Channel from "../models/Channel.model.js";
 import Video from "../models/Video.model.js";
+import User from "../models/User.model.js";
 
 // import utility functions
 import { sendErrorResponse } from "../utils/sendErrorResponse.js";
@@ -313,6 +314,30 @@ export const getAllChannels = async (req, res, next) => {
         })),
       },
       "Channels retrieved successfully"
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const channelExists = async (req, res, next) => {
+  try {
+    const { channelId } = req.params;
+    const channel = await Channel.findById(channelId);
+    if (!channel) {
+      return sendErrorResponse(
+        res,
+        404,
+        "Channel Not Found",
+        "The requested channel does not exist."
+      );
+    }
+    return sendSuccessResponse(
+      res,
+      200,
+      { exists: true , },
+      "Channel exists"
     );
   } catch (error) {
     next(error);
