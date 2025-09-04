@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
       // console.log(user)
       if (!user){
         logout();
-        setIsLoggedIn(false)
+        setIsLoggedIn(false);
         setLoading(false);
         return;
       }
@@ -36,23 +36,26 @@ export const AuthProvider = ({ children }) => {
   getUser();
 }, []);
 
- const login = async (email, password) => {
+  const login = async (email, password) => {
     try {
-      const res = await userAPI.login(
-        { email, password }
-      );
-      console.log(res)
+
+       const res = await userAPI.login({ email, password });
 
       const token = res.accessToken;
       if (token) {
         logoutUser();
         saveToken(token);
-        const userData =await getUserFromToken();
+         const userData = await getUserFromToken();
+        if (!userData) {
+          logout();
+          setIsLoggedIn(false);
+          return;
+        }
         setAuthUser(userData);
-        setIsLoggedIn(true)
+        setIsLoggedIn(true);
       }
     } catch (err) {
-      console.log(err)
+      console.log(err);
       const message =
         err?.response?.data?.error?.message || "Login failed. Try again!";
       throw new Error(message);
@@ -66,6 +69,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateAuthUser = (updatedUserData) => {
+     if (!updatedUserData) return;
     setAuthUser(updatedUserData);
   };
 if (loading) return <Loader size="lg" />;
@@ -80,8 +84,7 @@ if (loading) return <Loader size="lg" />;
         IsLoggedIn,
         isLoggedIn: !!authUser,
         token: getToken(),
-      }}
-    >
+      }}>
       {children}
     </AuthContext.Provider>
   );

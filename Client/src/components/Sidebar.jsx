@@ -1,14 +1,13 @@
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { HiOutlineBars3 } from "react-icons/hi2";
 import Overlay from "./Overlay";
 import { sidebarLinks } from "../constants/sidebarLinks";
 import { IoMdHome } from "react-icons/io";
-import useActivePath from "../helpers/useActivePath";
+import { useActivePath } from "../helpers/userActivePath";
 
 const Sidebar = ({ isOpen, onClose }) => {
-
-    // Using custom hook
-const isActivePath = useActivePath();
+  // Using custom hook
+  const isActivePath = useActivePath();
 
   return (
     <>
@@ -17,7 +16,7 @@ const isActivePath = useActivePath();
         text-gray-900  z-55 transform transition-transform ease-linear duration-200 ${
           isOpen
             ? "translate-x-0 block"
-            : isActivePath("/", true)
+            : !isActivePath("/watch/", true)
             ? "xl:hidden -translate-x-full xl:translate-0"
             : "-translate-x-full"
         }`}
@@ -43,8 +42,7 @@ const isActivePath = useActivePath();
         </div>
 
         <nav className="w-full scroll-smooth flex-1  p-3 overflow-y-auto overflow-x-hidden scroll-hover">
-
-           <Link
+          <Link
             key={"/"}
             to={"/"}
             onClick={onClose}
@@ -52,11 +50,11 @@ const isActivePath = useActivePath();
               isActivePath("/", true)
                 ? "bg-gray-100 hover:bg-gray-200"
                 : "hover:bg-gray-100"
-            }`}>
+            }`}
+          >
             <IoMdHome className="w-6 h-6" />
             <span className="text-sm">Home</span>
           </Link>
-
 
           {sidebarLinks.map(({ section, links }, i) => (
             <div key={section || i} className="space-y-1">
@@ -68,7 +66,6 @@ const isActivePath = useActivePath();
               {links.map(({ to, label, icon: Icon }) => (
                 <Button
                   key={to}
-              
                   onClick={onClose}
                   className={`flex items-center gap-3 w-[calc(100%-12px)] px-3 py-2 rounded-lg text-black ${
                     isActivePath(to, true)
@@ -84,7 +81,7 @@ const isActivePath = useActivePath();
           ))}
         </nav>
       </aside>
-     <div className={isActivePath("/", true) ? "xl:hidden" : ""}>
+      <div className={!isActivePath("/watch/", true) ? "xl:hidden" : ""}>
         {isOpen && <Overlay />}
       </div>
     </>

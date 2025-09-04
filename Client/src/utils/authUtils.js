@@ -1,7 +1,7 @@
 // src/utils/authUtils.js
 
 
-import api from "../api/axios";
+import api from "../services/api";
 
 const TOKEN_KEY = "auth_token";
 
