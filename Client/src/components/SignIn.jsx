@@ -3,9 +3,10 @@ import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { use, useEffect } from "react";
+import { handleAPIError, userAPI } from "../services/api";
 
 const SignIn = () => {
-   const { authUser,login } = useAuth();
+   const { authUser, login } = useAuth();
   const navigate = useNavigate();
   const {
     register,
@@ -14,10 +15,20 @@ const SignIn = () => {
   } = useForm();
   const onSubmit = async (data) => {
     try {
-      await login(data.email, data.password);
-      navigate(`/`);
+       const res = await userAPI.login({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (res.success) {
+        login(res);
+        toast.success(res.message || "Login successfully!");
+        navigate(`/`);
+      } else {
+        toast.error(res?.data.error?.message || "Login failed. Try again!");
+      }
     } catch (e) {
-      toast.error(e?.message || "Login failed Try again!");
+      toast.error(handleAPIError(e)?.message || "Login failed Try again!");
     }
   };
 
@@ -30,10 +41,9 @@ const SignIn = () => {
   return (
     <div className="fixed inset-0  z-50 bg-gray-100 flex items-center justify-center ">
       <div className="bg-transparent w-full min-h-full max-h-full py-4 overflow-y-auto flex flex-col">
-        <form
+       <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col bg-white p-8 rounded-lg shadow-xl h-full w-80 mx-auto my-auto"
-        >
+          className="flex flex-col bg-white p-8 rounded-lg shadow-xl h-full w-80 mx-auto my-auto">
           <div className="w-full flex flex-none justify-center items-center mb-4">
             <img
               src="https://www.gstatic.com/youtube/img/branding/youtubelogo/svg/youtubelogo.svg"
@@ -41,7 +51,6 @@ const SignIn = () => {
               className={`h-[30px]`}
             />
           </div>
-
           <div className="mb-4">
             <label className="block mb-1 font-medium" htmlFor="email">
               Email
@@ -76,8 +85,7 @@ const SignIn = () => {
               </p>
             )}
           </div>
-
-          <button
+            <button
             disabled={isSubmitting}
             className="w-full mt-2 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 shadow-lg"
           >

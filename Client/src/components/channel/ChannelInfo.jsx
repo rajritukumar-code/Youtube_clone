@@ -14,7 +14,7 @@ const ChannelInfo = ({
   setShowUploadModal,
 }) => {
   // Avatar error handling
-  const [avatarError, setAvatarError] = useState(null);
+  const [avatarError, setAvatarError] = useState(channelData?.avatar ? false : true);
   const [showDescription, setShowDescription] = useState(false);
   useEffect(() => {
     setAvatarError(null);
@@ -70,7 +70,7 @@ const ChannelInfo = ({
 
           <div className="hidden md:block">
             <div className="flex gap-2 mb-4 items-center">
-              <p className="text-sm gap-2 text-gray-700  max-w-2xl">
+              <p className="text-sm break-words break-all whitespace-normal text-gray-700  max-w-2xl">
                 {showDescription
                   ? channelData.description
                   : `${channelData.description?.substring(0, 20)}...`}

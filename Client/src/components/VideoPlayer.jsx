@@ -45,6 +45,7 @@ import { videoAPI, commentAPI, channelAPI } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { PiPauseBold } from "react-icons/pi";
 import { BsPauseBtnFill, BsPauseFill, BsPlayFill } from "react-icons/bs";
+import { toast } from "react-toastify";
 
 const VideoPlayer = () => {
   const { videoId } = useParams();
@@ -235,7 +236,7 @@ const VideoPlayer = () => {
   // Like/Dislike comment
   const handleCommentLike = async (commentId, action) => {
     if (!isLoggedIn) {
-      alert("Please sign in to like comments");
+      toast.error("Please sign in to like comments");
       return;
     }
 
@@ -343,7 +344,7 @@ const VideoPlayer = () => {
   //  Handle like
   const handleLike = async () => {
     if (!isLoggedIn) {
-      alert("Please sign in to like videos");
+      toast.error("Please sign in to like videos");
       return;
     }
 
@@ -360,7 +361,7 @@ const VideoPlayer = () => {
   // Handle dislike
   const handleDislike = async () => {
     if (!isLoggedIn) {
-      alert("Please sign in to dislike videos");
+      toast.error("Please sign in to dislike videos");
       return;
     }
 
@@ -393,6 +394,7 @@ const VideoPlayer = () => {
   // Handle comment
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
+    if (!isLoggedIn) return toast.error("Please sign in to comment");
     if (newComment.trim()) {
       const comment = {
         id: comments.length + 1,
@@ -563,7 +565,26 @@ const VideoPlayer = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex text-xs md:text-sm overflow-x-scroll scrollbar-hide items-center gap-2">
+              <div className="relative flex text-xs md:text-sm scrollbar-hide items-center gap-2">
+                {showMoreActions && (
+                  <div className="absolute right-0 top-12 bg-gray-50 shadow-lg rounded-lg border  border-gray-200 py-2 w-48 z-10">
+                    <button className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 w-full text-left ">
+                      <MdPlaylistAdd size={20} />
+                      <span>Save to playlist</span>
+                    </button>
+                    <button className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 w-full text-left ">
+                      <RiScissorsLine size={20} />
+                      <span>Clip</span>
+                    </button>
+                    <button className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 w-full text-left ">
+                      <FaFlag size={16} />
+                      <span>Report</span>
+                    </button>
+                  </div>
+                )}
+                <div className="flex flex-1 items-center gap-2 overflow-x-auto">
+
+                </div>
                 {/* Like/Dislike Combined Button */}
                 <div className="flex items-center bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
                   <button
@@ -622,29 +643,14 @@ const VideoPlayer = () => {
                   </button>
 
                   {/* More Actions Dropdown */}
-                  {showMoreActions && (
-                    <div className="absolute right-0 top-12 bg-white shadow-lg rounded-lg border py-2 w-48 z-10">
-                      <button className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 w-full text-left ">
-                        <MdPlaylistAdd size={20} />
-                        <span>Save to playlist</span>
-                      </button>
-                      <button className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 w-full text-left ">
-                        <RiScissorsLine size={20} />
-                        <span>Clip</span>
-                      </button>
-                      <button className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 w-full text-left ">
-                        <FaFlag size={16} />
-                        <span>Report</span>
-                      </button>
-                    </div>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Channel Info */}
-          <div className="flex bg-gray-100 items-start justify-between  border-b border-gray-200 mb-4 p-4 rounded-lg">
+         <div className="flex bg-gray-100 items-start justify-between p-4 mt-4 mb-4 rounded-lg border-b border-gray-200">
             <div className="flex items-start gap-3">
               <div className="flex-1">
                 <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -699,7 +705,7 @@ const VideoPlayer = () => {
               <div className="flex gap-3">
                 {authUser?.avatar ? (
                   <img
-                    src={authUser.avatar}
+                    src={authUser?.avatar}
                     alt="Your avatar"
                     className="w-10 h-10 object-cover rounded-full"
                   />
@@ -932,7 +938,6 @@ const VideoPlayer = () => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
