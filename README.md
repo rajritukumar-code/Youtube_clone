@@ -65,7 +65,7 @@ A full‑featured YouTube clone built with the MERN stack (MongoDB, Express, Rea
 
    ```bash
    # Install backend dependencies
-   cd server
+   cd Backend
    npm install
 
    # Install frontend dependencies
@@ -77,12 +77,12 @@ A full‑featured YouTube clone built with the MERN stack (MongoDB, Express, Rea
 
 - Start the backend server:
   ```bash
-  cd server
+  cd Backend
   npm
   ```
   - Seed sample data to database:
   ```bash
-  cd server
+  cd backend
   npm run seed
   ```
 - In a new terminal, start the frontend:
