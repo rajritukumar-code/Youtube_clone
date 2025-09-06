@@ -47,7 +47,7 @@ function App() {
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
         />
-        {!isActivePath("/watch/") && (
+        {!isActivePath("/watch/",true) && (
           <MiniSidebar onClose={() => setIsSidebarOpen(false)} />
         )}
 

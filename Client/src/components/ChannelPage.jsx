@@ -15,7 +15,7 @@ import ChannelInfo from "./channel/ChannelInfo.jsx";
 
 const ChannelPage = () => {
   const { channelId } = useParams();
-  const navigate = useNavigate();
+
   const { authUser, isLoggedIn } = useAuth();
 
   const [channelData, setChannelData] = useState({});
@@ -30,13 +30,13 @@ const ChannelPage = () => {
   const [showEditChannelModal, setShowEditChannelModal] = useState(false);
 
   const [editingVideo, setEditingVideo] = useState(null);
+  const navigate = useNavigate();
 
   const startEditChannel = () => {
     setShowEditChannelModal(true);
   };
 
   const handleUpdateChannel = async (editChannelData) => {
-   
     try {
       const response = await channelAPI.updateChannel(
         channelData.id,
@@ -50,7 +50,7 @@ const ChannelPage = () => {
       setShowEditChannelModal(false);
       toast.success("Channel updated successfully");
     } catch (error) {
-      toast.error(handleAPIError(error).message);
+      console.error("Error updating channel:", handleAPIError(error));
     }
   };
 
@@ -62,7 +62,6 @@ const ChannelPage = () => {
   };
 
   const handleUploadVideo = async (newVideo) => {
-    
     if (!isLoggedIn) return navigate("/signin");
     if (!isOwner)
       return toast.error("You can only upload videos to your own channel.");
@@ -76,17 +75,17 @@ const ChannelPage = () => {
       try {
         const response = await videoAPI.createVideo({
           ...newVideo,
-          thumbnailUrl:
-            newVideo.thumbnailUrl,
+          thumbnailUrl: newVideo.thumbnailUrl,
         });
         if (response.success) {
-         const data=response.data;
-          setVideos((prev) => [...prev, data]);
+          const { id, ...rest } = data;
+          setVideos((prev) => [{ _id: id, ...rest }, ...prev]);
           setShowUploadModal(false);
           toast.success("Video uploaded successfully!");
         }
       } catch (error) {
-        toast.error(handleAPIError(error).message);
+        toast.error("Failed to upload video");
+        console.error("Error uploading video:", handleAPIError(error));
       }
     } else {
       toast.error("Please fill in all required fields.");
@@ -94,7 +93,6 @@ const ChannelPage = () => {
   };
 
   const handleUpdateVideo = async (editedVideo) => {
-   
     if (!isLoggedIn) return navigate("/signin");
     const videoToEdit = videos.find((v) => v.id === editingVideo.id);
     if (!videoToEdit || videoToEdit.uploader !== authUser.id)
@@ -108,7 +106,7 @@ const ChannelPage = () => {
       if (response.success) {
         setVideos((prev) =>
           prev.map((v) =>
-            v._id === editingVideo._id ? { ...v, ... editedVideo } : v
+            v._id === editingVideo._id ? { ...v, ...editedVideo } : v
           )
         );
         setEditingVideo(null);
@@ -116,7 +114,8 @@ const ChannelPage = () => {
         toast.success("Video updated successfully!");
       }
     } catch (error) {
-      toast.error(handleAPIError(error).message);
+      toast.error("Failed to update video");
+      console.error("Error updating video:", handleAPIError(error));
     }
   };
 
@@ -133,7 +132,8 @@ const ChannelPage = () => {
           toast.success("Video deleted successfully!");
         }
       } catch (error) {
-        toast.error(handleAPIError(error).message);
+        toast.error("Failed to delete video");
+        console.error("Error deleting video:", handleAPIError(error));
       }
     }
   };
@@ -145,22 +145,19 @@ const ChannelPage = () => {
     setShowEditModal(true);
   };
 
-  const handleCreateChannel = async (e) => {
-    e.preventDefault();
+  const handleCreateChannel = async (formData) => {
     if (!isLoggedIn) return navigate("/signin");
 
-    const formData = new FormData(formData);
-    const name =
-      formData.name || authUser?.username || "My Channel";
-    const description =
-      formData.description || `Welcome to ${name}!`;
+    const name = formData.name || authUser?.username || "My Channel";
+    const description = formData.description || `Welcome to ${name}!`;
+    const avatar =
+      formData.avatar || authUser?.avatar || "https://via.placeholder.com/150";
 
     try {
       const response = await channelAPI.createChannel({
         channelName: name,
         description,
-        avatar:formData.avatar
-
+        avatar,
       });
       if (response.success) {
         setChannelData(response.data);
@@ -170,7 +167,8 @@ const ChannelPage = () => {
         toast.success("Channel created successfully!");
       }
     } catch (error) {
-      toast.error(handleAPIError(error).message);
+      toast.error("Failed to create channel");
+      console.error("Error creating channel:", handleAPIError(error));
     }
   };
 
@@ -187,14 +185,13 @@ const ChannelPage = () => {
             setChannelData(response.data);
             setVideos(response.data.videos);
             setChannelExists(true);
-          }
-          else{
+          }else{
             setChannelExists(false);
           }
           return;
         } catch {
           setChannelExists(false);
-          return
+          return;
         }
       } else {
         const response = await channelAPI.getChannel(channelId);
@@ -203,9 +200,8 @@ const ChannelPage = () => {
           setVideos(response.data.videos);
           setChannelExists(true);
           setIsOwner(response.data.owner.id === authUser?.id);
-        }
-        else{
-            setChannelExists(false);
+        } else {
+          setChannelExists(false);
         }
         return;
       }
@@ -255,19 +251,22 @@ const ChannelPage = () => {
     );
 
   return (
-    <div className="w-full bg-white ">
+    <div className="w-full max-w-[1360px] mx-auto bg-white ">
       {/* Banner */}
       <div className="w-full text-lg md:text-2xl font-semibold flex items-center justify-center rounded-xl h-32 sm:h-48 lg:h-60 p-4">
-
-          {channelData?.channelBanner ?<img
+        {channelData?.channelBanner ? (
+          <img
             src={channelData?.channelBanner}
             onError={(e) => {
               e.target.src =
-                "https://yt3.googleusercontent.com/qadmKywk8TQsrBFmbrU5EcFtOZYju26eaRUYZFl90pXJIWlmKDc2bcu-XaLy1mb0bNxPYJZGbw=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj"
+                "https://yt3.googleusercontent.com/qadmKywk8TQsrBFmbrU5EcFtOZYju26eaRUYZFl90pXJIWlmKDc2bcu-XaLy1mb0bNxPYJZGbw=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj";
             }}
             alt="Channel banner"
             className="w-full rounded-xl h-full object-cover"
-          />:"Add a banner to your channel"}
+          />
+        ) : (
+          "Add a banner to your channel"
+        )}
       </div>
 
       <ChannelInfo
@@ -294,7 +293,6 @@ const ChannelPage = () => {
 
       {showUploadModal && (
         <UploadVideoModal
-        
           onClose={() => setShowUploadModal(false)}
           onUpload={handleUploadVideo}
         />
@@ -302,9 +300,8 @@ const ChannelPage = () => {
 
       {showEditModal && editingVideo && (
         <UpdateVideoModal
-           video={editingVideo}
-          onClose={() => 
-            setShowEditModal(false)}
+          video={editingVideo}
+          onClose={() => setShowEditModal(false)}
           onUpdate={handleUpdateVideo}
         />
       )}
