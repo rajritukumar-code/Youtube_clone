@@ -1,5 +1,10 @@
 A full‑featured YouTube clone built with the MERN stack (MongoDB, Express, React, Node). This specification provides a complete project blueprint: features, system architecture, database models, API endpoints, frontend structure, media handling, security, testing, deployment, and ideas for future improvements.
 
+
+video sample: https://drive.google.com/file/d/1wQIzYxg9gIbzbUu8yJGep7TtLFEf0w8l/view?usp=sharing
+
+github link: https://github.com/rajritukumar-code/Youtube_clone
+
 ## Features
 
 ### User Authentication
